@@ -103,7 +103,7 @@ for scenario_name in glob.glob("*.json", root_dir=scenario_root, recursive=True)
 				if len(text_data) < 2:
 					continue
 				line_data = text_data[1]
-				inserter = InserterMultiple(line_data, None)
+				inserter = InserterMultiple(line_data, text_data)
 			else:
 				raise NotImplementedError(f"unrecognized version: {version}")
 			inserters.append(inserter)
