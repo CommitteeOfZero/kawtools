@@ -22,6 +22,18 @@ def split_name(text: str):
 		return m.group(1), m.group(2)
 	return None, text
 
+def update_json(path: str, new_data) -> None:
+	try:
+		with open(path, "r", encoding="utf-8-sig") as f:
+			old_data = json.load(f)
+		if old_data == new_data:
+			return
+	except Exception:
+		pass
+	with open(path, "w", encoding="utf-8") as f:
+		json.dump(new_data, f, ensure_ascii=False, indent="  ", sort_keys=True)
+		f.write("\n")
+
 class Inserter:
 	def __len__(self) -> int:
 		return self._length()
@@ -106,9 +118,12 @@ for scenario_name in glob.glob("*.json", root_dir=scenario_root, recursive=True)
 		except Exception as e:
 			raise Exception(f"failed to load {lines_path}: {e}")
 		if len(inserters) != len(language_lines):
+			print(len(inserter), len(language_lines))
+			print(lines_path)
 			raise Exception("line count mismatch")
 		for line_index, inserter in enumerate(inserters):
-			inserter[language_index] = language_lines[line_index]
-	with open(scenario_path, "w", encoding="utf-8") as f:
-		json.dump(data, f, ensure_ascii=False, indent="  ")
-		f.write("\n")
+			language_line = language_lines[line_index]
+			language_line = language_line.replace("<i>", "%fSourceHanSansJP-RegularIt;")
+			language_line = language_line.replace("</i>", "%f;")
+			inserter[language_index] = language_line
+	update_json(scenario_path, data)
