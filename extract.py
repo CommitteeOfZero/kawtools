@@ -47,8 +47,14 @@ for scenario_name in glob.glob("*.json", root_dir=scenario_root, recursive=True)
 			for text_data in scene_data["texts"]:
 				if len(text_data) < 2:
 					continue
+				speaker = text_data[0]
 				line_data = text_data[1]
-				line_languages = [x[1] for x in line_data]
+				line_languages = []
+				for x in line_data:
+					line = x[1]
+					if isinstance(speaker, str) and speaker != "":
+						line = f"【{speaker}】{line}"
+					line_languages.append(line)
 				lines.append(line_languages)
 		else:
 			raise NotImplementedError(f"unrecognized version: {version}")
