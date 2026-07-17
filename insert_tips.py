@@ -140,6 +140,8 @@ with open(tips_path, "r", encoding="utf-8-sig") as f:
 languages = data["language"]
 for language_index in range(len(languages)):
 	lines_path = os.path.join(lines_root, f"lang{language_index}", "tips.txt")
+	if not os.path.exists(lines_path):
+		continue
 	formatted_tips = load_text(lines_path)
 	languages[language_index] = parse_tips(formatted_tips)
 
