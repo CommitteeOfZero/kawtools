@@ -3,14 +3,17 @@ import json
 import os
 import sys
 
-patch_dir, out_path = sys.argv[1:]
+args = sys.argv[1:]
+patch_dir, out_path = args[0], args[1]
+glob_pattern = args[2] if len(args) > 2 else "*.m"
+expire_suffix = args[3] if len(args) > 3 else ".psb.m"
 
 file_info = {}
-for name in sorted(glob.glob("*.m", root_dir=patch_dir)):
+for name in sorted(glob.glob(glob_pattern, root_dir=patch_dir)):
 	file_info[name] = [0, 0]
 
 manifest = {
-	"expire_suffix_list": [".psb.m"],
+	"expire_suffix_list": [expire_suffix],
 	"file_info": file_info,
 	"info": "archive",
 	"version": 1.0,
